@@ -1,8 +1,10 @@
 import json
+from typing import Annotated
 
-from fastapi import Response
+from fastapi import Response, Query
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
 from starlette.responses import FileResponse, JSONResponse, RedirectResponse
 from starlette.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
@@ -21,9 +23,20 @@ async def main():
     return "./static/temp.pdf"
 
 
-@app.get("/re")
-async def redirect_typer():
-    return RedirectResponse("http://localhost:5000/pdf")
+class Item(BaseModel):
+    response_type: str
+    client_id: str
+    scope: str
+    state: str
+    redirect_uri: str
+    # nonce: str
+
+
+@app.get("/authorize")
+async def redirect_typer(item: Annotated[Item, Query()]):
+    return RedirectResponse(
+        f"http://127.0.0.1:8080/login/oauth2/code/boat?code=+WYT3XemV4f81ghHi4V+RyNwvATDaD4FIj0BpfFC4Wzg=&state={item.state}")
+
 
 #
 # @app.get("/", response_class=HTMLResponse)
@@ -32,10 +45,27 @@ async def redirect_typer():
 #         request=request, name="home.html"
 #     )
 
-
-@app.get("/json")
+@app.post("/token")
 def read_root():
-    with open("./static/temp.json") as foo:
+    with open("./static/token.json") as foo:
+        return Response(content=foo.read(), media_type='application/json')
+
+
+@app.get("/jwk")
+def read_root():
+    with open("./static/jwk.json") as foo:
+        return Response(content=foo.read(), media_type='application/json')
+
+
+@app.get("/user")
+def read_root():
+    with open("./static/user.json") as foo:
+        return Response(content=foo.read(), media_type='application/json')
+
+
+@app.get("/.well-known/openid-configuration")
+def read_root():
+    with open("./static/auth.json") as foo:
         # json_str = json.dumps(foo, indent=4, default=str)
         return Response(content=foo.read(), media_type='application/json')
         # return Response(content=data, media_type="application/json")
@@ -47,7 +77,6 @@ def read_root1():
         data = foo.read()
         headers = {'Content-Disposition': 'inline; filename="out.xml"'}
         return Response(data, headers=headers, media_type='application/xml')
-
 
 # import asyncio
 #

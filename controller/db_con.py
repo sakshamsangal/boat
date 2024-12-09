@@ -25,15 +25,16 @@ def outside_loop():
         y = [*tb['cols'].values()]
         vals = ", ".join(['%s'] * len(x))
         sql = f"INSERT INTO {tb['name']} ({', '.join(x)}) VALUES({vals});"
-        print(sql)
         try:
             cursor.execute(sql, y)
+            connection.commit()
+            print(tb['name'], "entry created")
         except Exception as e:
+            connection.rollback()
             print(e)
-    try:
-        connection.commit()
-    except Exception as e:
-        print("Failure..", e)
+    # try:
+    # except Exception as e:
+    #     print("Failure..", e)
 
 
 outside_loop()

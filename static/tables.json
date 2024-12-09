@@ -3,7 +3,7 @@
     {
       "name": "countrylanguage",
       "cols": {
-        "CountryCode": "WPW",
+        "CountryCode": "WPL",
         "Language": "qw",
         "IsOfficial": "T",
         "Percentage": 15

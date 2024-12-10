@@ -1,0 +1,9 @@
+{
+  "tb_name": "countrylanguage",
+  "tb_cols": {
+    "CountryCode": "WPL",
+    "Language": "qw",
+    "IsOfficial": "T",
+    "Percentage": 15
+  }
+}

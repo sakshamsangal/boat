@@ -15,7 +15,7 @@ cursor = connection.cursor()
 # users = cursor.fetchall()
 # print(users)
 
-with open("../static/tables.json") as json_file:
+with open("../static/tb/tables.json") as json_file:
     data = json.load(json_file)
 
 
